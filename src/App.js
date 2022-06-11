@@ -1,23 +1,36 @@
-import logo from './logo.svg';
+import Meme from './Meme';
+import MemeForm from './MemeForm';
+import { useSelector, useDispatch } from 'react-redux';
 import './App.css';
 
 function App() {
+   const memes = useSelector(state => state.memes);
+   const dispatch = useDispatch();
+
+   const addMeme = (newMeme) => {
+      dispatch({ type: "ADD_MEME", meme: newMeme})
+   }
+
+   const deleteMeme = (id) => {
+      dispatch({ type: "DELETE_MEME", id})
+   }
+
+   const memeComps = memes.map(m => (
+      <Meme 
+         key={m.id}
+         topText={m.topText}
+         bottomText={m.bottomText}
+         url={m.url}
+         deleteMeme={() => deleteMeme(m.id)}
+      />
+   ));
+      
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <MemeForm addMeme={addMeme} />
+      <hr />
+      {memeComps}
     </div>
   );
 }
